@@ -1,0 +1,19 @@
+# binarios e objetos
+*.o
+*.obj
+*.exe
+*.pdb
+*.ilk
+code/bench
+code/test_platform
+code/test_bbuffer
+
+# python
+__pycache__/
+*.pyc
+
+# editores / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
