@@ -42,14 +42,17 @@ cd ../experimentos
 
 ### Windows (nativo, MSVC)
 
-Abrir o **x64 Native Tools Command Prompt for VS**:
+Precisa do Visual Studio Build Tools com "Desenvolvimento para desktop com C++". Pode ser
+qualquer terminal (PowerShell ou cmd): o script acha o MSVC sozinho.
 
 ```bat
 cd code
-build_windows.bat test
+.\build_windows.bat test
 cd ..\experimentos
-powershell -ExecutionPolicy Bypass -File run_windows.ps1
+powershell -ExecutionPolicy Bypass -File .\run_windows.ps1
 ```
+
+O `run_windows.ps1` também compila sozinho se o `bench.exe` ainda não existir.
 
 ### Análise
 

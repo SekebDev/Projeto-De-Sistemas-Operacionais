@@ -3,7 +3,8 @@
 #   cd experimentos
 #   powershell -ExecutionPolicy Bypass -File .\run_windows.ps1
 #
-# Antes: compilar com code\build_windows.bat (bench.exe precisa existir).
+# Se o bench.exe ainda nao existir, compila sozinho (precisa do MSVC
+# instalado, mas nao do "Native Tools Command Prompt").
 # Mesma logica do run_linux.sh: 12 configs x $Reps, ordem embaralhada,
 # 1 aquecimento descartado por configuracao, depois latencia.
 param(
@@ -19,7 +20,10 @@ $Dados = Join-Path $Raiz 'dados\windows'
 $Vazao = Join-Path $Dados 'vazao.csv'
 $Lat   = Join-Path $Dados 'latencia.csv'
 
-if (-not (Test-Path $Bench)) { throw "bench.exe nao encontrado. Rode code\build_windows.bat antes." }
+if (-not (Test-Path $Bench)) {
+    & cmd /c "`"$(Join-Path $Raiz 'code\build_windows.bat')`""
+    if ($LASTEXITCODE -ne 0) { throw "falha ao compilar o bench.exe" }
+}
 New-Item -ItemType Directory -Force $Dados | Out-Null
 
 # ---- ambiente ----
