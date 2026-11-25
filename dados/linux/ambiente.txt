@@ -1,0 +1,10 @@
+data: 2026-11-25T14:37:00-03:00
+kernel: Linux 7.0.0-43-generic x86_64 GNU/Linux
+PRETTY_NAME="Ubuntu 26.04.1 LTS"
+cpu: AMD Ryzen 7 5700U with Radeon Graphics
+nucleos logicos: 16
+ram: 
+compilador: cc (Ubuntu 15.2.0-16ubuntu1) 15.2.0
+flags: -O2 -Wall -Wextra -std=c99 -pthread
+governor: powersave
+itens: 400000  reps: 30  lat_reps: 5
