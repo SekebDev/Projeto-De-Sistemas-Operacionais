@@ -4,11 +4,13 @@ analisar.py - resume os CSVs brutos e gera os graficos.
     python experimentos/analisar.py
 
 Le dados/<so>/vazao.csv e dados/<so>/latencia.csv(.gz) sem alterar
-nada, e escreve:
-    experimentos/resumo.csv
-    experimentos/resumo_latencia.csv
+nada. Todo arquivo gerado leva o nome do SO, entao rodar a analise
+numa maquina que so tem os dados de um SO nao apaga os do outro:
+    experimentos/resumo_<so>.csv
+    experimentos/resumo_latencia_<so>.csv
     experimentos/graficos/vazao_<so>.png
-    experimentos/graficos/latencia.png
+    experimentos/graficos/latencia_<so>.png
+    experimentos/graficos/latencia_comparacao.png  (so com 2+ SOs)
 """
 from pathlib import Path
 
@@ -48,7 +50,8 @@ def resumo(df):
     r = g["vazao_itens_s"].agg(media="mean", desvio="std", n="count").reset_index()
     t = g["tempo_s"].agg(tempo_medio="mean", tempo_desvio="std").reset_index()
     r = r.merge(t, on=CHAVE)
-    r.to_csv(SAIDA / "resumo.csv", index=False, float_format="%.4f")
+    for so, d in r.groupby("so"):
+        d.to_csv(SAIDA / f"resumo_{so}.csv", index=False, float_format="%.4f")
     return r
 
 
@@ -76,24 +79,35 @@ def grafico_vazao(r):
         plt.close(fig)
 
 
-def grafico_latencia(lat):
+def boxplot_latencia(lat, titulo, arquivo):
     grupos, rotulos = [], []
     for (so, versao), d in lat.groupby(["so", "versao"]):
         grupos.append(d["latencia_ns"] / 1000.0)
         rotulos.append(f"{so}\n{versao}")
-    fig, ax = plt.subplots(figsize=(8, 4.5))
+    fig, ax = plt.subplots(figsize=(4 + 2 * len(grupos), 4.5))
     ax.boxplot(grupos, showfliers=False)
     ax.set_xticks(range(1, len(rotulos) + 1))
     ax.set_xticklabels(rotulos)
     ax.set_ylabel("latencia (us)")
-    ax.set_title("Latencia produtor -> consumidor (1x1, buffer 1)")
+    ax.set_title(titulo)
     ax.grid(axis="y", alpha=0.3)
     fig.tight_layout()
-    fig.savefig(GRAF / "latencia.png", dpi=150)
+    fig.savefig(GRAF / arquivo, dpi=150)
     plt.close(fig)
 
-    q = lat.groupby(["so", "versao"])["latencia_ns"].describe(percentiles=[0.5, 0.9, 0.99])
-    q.to_csv(SAIDA / "resumo_latencia.csv", float_format="%.1f")
+
+def grafico_latencia(lat):
+    for so, d in lat.groupby("so"):
+        boxplot_latencia(d, f"Latencia produtor -> consumidor (1x1, buffer 1) - {so}",
+                         f"latencia_{so}.png")
+        q = d.groupby("versao")["latencia_ns"].describe(percentiles=[0.5, 0.9, 0.99])
+        q.to_csv(SAIDA / f"resumo_latencia_{so}.csv", float_format="%.1f")
+
+    # comparacao lado a lado so quando ha dados de mais de um SO,
+    # para nunca ser regravada com um SO so
+    if lat["so"].nunique() > 1:
+        boxplot_latencia(lat, "Latencia produtor -> consumidor (1x1, buffer 1)",
+                         "latencia_comparacao.png")
 
 
 def main():

@@ -25,7 +25,7 @@ Em cima dela, um buffer circular limitado em duas versões:
 code/          camada de threads, buffer A/B, bench, Makefile, build_windows.bat
 testes/        test_platform.c (cada operação da camada), test_bbuffer.c (nenhum item perdido/duplicado)
 dados/         CSVs brutos (linux/, windows/) + ambiente.txt de cada máquina
-experimentos/  scripts de execução, analisar.py, resumo.csv e graficos/
+experimentos/  scripts de execução, analisar.py, resumos por SO e graficos/
 video/         vídeo da apresentação
 ```
 
@@ -62,8 +62,10 @@ Precisa de Python 3 com `pandas` e `matplotlib`:
 python experimentos/analisar.py
 ```
 
-Gera `experimentos/resumo.csv`, `experimentos/resumo_latencia.csv` e os gráficos em
-`experimentos/graficos/`. Os gráficos são gerados só a partir dos CSVs brutos, que nunca
+Gera `experimentos/resumo_<so>.csv`, `experimentos/resumo_latencia_<so>.csv` e, em
+`experimentos/graficos/`, `vazao_<so>.png`, `latencia_<so>.png` e `latencia_comparacao.png`
+(esta só quando há dados dos dois SOs). Como cada arquivo leva o nome do SO, rodar a análise
+numa máquina com os dados de um SO só não apaga os do outro. Os gráficos são gerados só a partir dos CSVs brutos, que nunca
 são editados à mão.
 
 ### Rodando o bench na mão

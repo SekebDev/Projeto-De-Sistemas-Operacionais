@@ -7,6 +7,7 @@
 # em ordem embaralhada, com 1 execucao de aquecimento descartada por
 # configuracao. Depois roda as medicoes de latencia (1x1, buffer 1).
 set -euo pipefail
+export LC_ALL=C   # saida dos comandos em ingles (free, date), facil de filtrar
 
 ITENS=${ITENS:-400000}
 REPS=${REPS:-30}
