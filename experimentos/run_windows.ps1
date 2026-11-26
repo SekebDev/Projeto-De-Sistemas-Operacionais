@@ -30,7 +30,13 @@ New-Item -ItemType Directory -Force $Dados | Out-Null
 $cpu = Get-CimInstance Win32_Processor | Select-Object -First 1
 $os  = Get-CimInstance Win32_OperatingSystem
 $cl  = 'n/d'
-try { $cl = (cmd /c "cl 2>&1" | Select-Object -First 1) } catch { }
+$vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+if (Test-Path $vswhere) {
+    $vsdir = & $vswhere -latest -products * -property installationPath
+    $clexe = Get-ChildItem "$vsdir\VC\Tools\MSVC\*\bin\Hostx64\x64\cl.exe" -ErrorAction SilentlyContinue |
+             Select-Object -Last 1
+    if ($clexe) { $cl = (cmd /c "`"$($clexe.FullName)`" 2>&1" | Select-Object -First 1) }
+}
 @(
     "data: $(Get-Date -Format o)"
     "so: $($os.Caption) $($os.Version) build $($os.BuildNumber)"
@@ -40,6 +46,7 @@ try { $cl = (cmd /c "cl 2>&1" | Select-Object -First 1) } catch { }
     "compilador: $cl"
     "flags: /O2 /W4"
     "plano de energia: $((powercfg /getactivescheme) -join ' ')"
+    "na tomada: $(@{1='nao (bateria)';2='sim'}[[int](Get-CimInstance Win32_Battery | Select-Object -First 1).BatteryStatus])"
     "itens: $Itens  reps: $Reps  lat_reps: $LatReps"
 ) | Set-Content -Encoding utf8 (Join-Path $Dados 'ambiente.txt')
 

@@ -1,9 +1,10 @@
-﻿data: 2026-11-25T09:04:08.5430668-03:00
+﻿data: 2026-11-25T21:09:40.6045157-03:00
 so: Microsoft Windows 11 Home Single Language 10.0.26200 build 26200
 cpu: 13th Gen Intel(R) Core(TM) i9-13980HX
 nucleos fisicos: 24  logicos: 32
 ram: 31.6 GB
-compilador: 'cl' não é reconhecido como um comando interno
+compilador: Microsoft (R) C/C++ Optimizing Compiler Versão 19.44.35230 para x64
 flags: /O2 /W4
-plano de energia: GUID do Esquema de Energia: 64a64f24-65b9-4b56-befd-5ec1eaced9b3  (Silent)
+plano de energia: GUID do Esquema de Energia: 1786f400-6433-4fca-b576-d6d7223c0042  (Desempenho Máximo)
+na tomada: sim
 itens: 400000  reps: 30  lat_reps: 5
