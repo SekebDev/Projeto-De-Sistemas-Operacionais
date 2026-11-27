@@ -26,7 +26,8 @@ code/          camada de threads, buffer A/B, bench, Makefile, build_windows.bat
 testes/        test_platform.c (cada operação da camada), test_bbuffer.c (nenhum item perdido/duplicado)
 dados/         CSVs brutos (linux/, windows/) + ambiente.txt de cada máquina
 experimentos/  scripts de execução, analisar.py, resumos por SO e graficos/
-video/         vídeo da apresentação
+relatorio/     relatório técnico (Relatorio_SO.pdf)
+video/         vídeo da apresentação (Apresentacao_SO_Tema2.mp4)
 ```
 
 ## Como reproduzir
