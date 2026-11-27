@@ -23,6 +23,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 DADOS = RAIZ / "dados"
 SAIDA = RAIZ / "experimentos"
 GRAF = SAIDA / "graficos"
+NOME = {"linux": "Linux", "windows": "Windows"}
 CHAVE = ["so", "versao", "produtores", "consumidores", "buffer"]
 
 
@@ -62,18 +63,18 @@ def grafico_vazao(r):
         for ax, ((p, c), d_pc) in zip(axes[0], grupos):
             for versao, d in d_pc.groupby("versao"):
                 d = d.sort_values("buffer")
-                rot = "A (var. condicao)" if versao == "A" else "B (semaforo)"
+                rot = "A (var. condição)" if versao == "A" else "B (semáforo)"
                 ax.errorbar(d["buffer"], d["media"], yerr=d["desvio"],
                             marker="o", capsize=4, label=rot)
             ax.set_xscale("log", base=2)
             ax.set_xticks([1, 16, 256])
             ax.set_xticklabels(["1", "16", "256"])
             ax.set_xlabel("tamanho do buffer")
-            ax.set_ylabel("vazao (itens/s)")
-            ax.set_title(f"{p} produtor(es) x {c} consumidor(es)")
+            ax.set_ylabel("vazão (itens/s)")
+            ax.set_title(f"{p} produtor(es) × {c} consumidor(es)")
             ax.grid(alpha=0.3)
             ax.legend()
-        fig.suptitle(f"Vazao x tamanho do buffer - {so}")
+        fig.suptitle(f"Vazão × tamanho do buffer — {NOME.get(so, so)}")
         fig.tight_layout()
         fig.savefig(GRAF / f"vazao_{so}.png", dpi=150)
         plt.close(fig)
@@ -83,12 +84,12 @@ def boxplot_latencia(lat, titulo, arquivo):
     grupos, rotulos = [], []
     for (so, versao), d in lat.groupby(["so", "versao"]):
         grupos.append(d["latencia_ns"] / 1000.0)
-        rotulos.append(f"{so}\n{versao}")
+        rotulos.append(f"{NOME.get(so, so)}\n{versao}")
     fig, ax = plt.subplots(figsize=(4 + 2 * len(grupos), 4.5))
     ax.boxplot(grupos, showfliers=False)
     ax.set_xticks(range(1, len(rotulos) + 1))
     ax.set_xticklabels(rotulos)
-    ax.set_ylabel("latencia (us)")
+    ax.set_ylabel("latência (µs)")
     ax.set_title(titulo)
     ax.grid(axis="y", alpha=0.3)
     fig.tight_layout()
@@ -98,7 +99,7 @@ def boxplot_latencia(lat, titulo, arquivo):
 
 def grafico_latencia(lat):
     for so, d in lat.groupby("so"):
-        boxplot_latencia(d, f"Latencia produtor -> consumidor (1x1, buffer 1) - {so}",
+        boxplot_latencia(d, f"Latência produtor → consumidor (1×1, buffer 1) — {NOME.get(so, so)}",
                          f"latencia_{so}.png")
         q = d.groupby("versao")["latencia_ns"].describe(percentiles=[0.5, 0.9, 0.99])
         q.to_csv(SAIDA / f"resumo_latencia_{so}.csv", float_format="%.1f")
@@ -106,7 +107,7 @@ def grafico_latencia(lat):
     # comparacao lado a lado so quando ha dados de mais de um SO,
     # para nunca ser regravada com um SO so
     if lat["so"].nunique() > 1:
-        boxplot_latencia(lat, "Latencia produtor -> consumidor (1x1, buffer 1)",
+        boxplot_latencia(lat, "Latência produtor → consumidor (1×1, buffer 1)",
                          "latencia_comparacao.png")
 
 
