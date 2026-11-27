@@ -6,9 +6,9 @@ GBC045 — Sistemas Operacionais — UFU/FACOM — 2026/2
 
 | Nome | Matrícula |
 |---|---|
-| _(preencher)_ | _(preencher)_ |
-| _(preencher)_ | _(preencher)_ |
-| _(preencher)_ | _(preencher)_ |
+| Vitor Cesar   |  12511BCC041  |
+| Luiz Henrique |  12121BSI232  |
+| Walker Lisboa |  12511BCC004  |
 
 ## O que tem aqui
 
